@@ -1,12 +1,13 @@
 package com.example.androiddevchallenge
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MyViewModel : ViewModel() {
     val state: MutableLiveData<CountdownState> = MutableLiveData()
-    private var minutes: Int = 1
+    private var minutes: Int = 0
     private var seconds: Int = 5
     private var timer: CountDownTimer? = null
 
@@ -15,8 +16,13 @@ class MyViewModel : ViewModel() {
     }
 
     fun handleViewEvent(viewEvent: ViewEvent) {
+        Log.i("ADC", "on view event $viewEvent")
         when (viewEvent) {
-            is StartStopButtonPressed -> toggleState()
+            StartStopButtonPressed -> toggleState()
+            ResetPressed -> {
+                timer = null
+                state.value = ConfigurationMode(minutes, seconds)
+            }
             is MinutesChanged -> {
                 minutes = viewEvent.newValue
                 state.value = ConfigurationMode(minutes, seconds)

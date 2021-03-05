@@ -19,7 +19,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                     CountdownTimerApp(
                         currentState = state,
                         onStartStop = { viewModel.handleViewEvent(StartStopButtonPressed) },
+                        onReset = { viewModel.handleViewEvent(ResetPressed) },
                         onMinutesChanged = { s -> viewModel.handleViewEvent(MinutesChanged(s)) },
                         onSecondsChanged = { s -> viewModel.handleViewEvent(SecondsChanged(s)) },
                     )
@@ -50,12 +52,13 @@ class MainActivity : AppCompatActivity() {
 fun CountdownTimerApp(
     currentState: CountdownState,
     onStartStop: () -> Unit = {},
+    onReset: () -> Unit = {},
     onMinutesChanged: (Int) -> Unit = {},
-    onSecondsChanged: (Int) -> Unit = {}
+    onSecondsChanged: (Int) -> Unit = {},
 ) {
     Surface(color = MaterialTheme.colors.background) {
         when (currentState) {
-            Finished -> TimeIsUp()
+            Finished -> TimeIsUp(onReset = onReset)
             is CountdownStateWithTime -> Timer(
                 currentState = currentState,
                 onStartStop = onStartStop
@@ -64,13 +67,8 @@ fun CountdownTimerApp(
     }
 }
 
-@Composable
-fun TimeIsUp() {
-    Text(text = "Time is up")
-}
 
-
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
+@Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreviewConfigMode() {
     MyTheme {
@@ -78,17 +76,9 @@ fun LightPreviewConfigMode() {
     }
 }
 
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
+@Preview(widthDp = 360, heightDp = 640)
 @Composable
-fun DarkPreviewStarted() {
-    MyTheme(darkTheme = true) {
-        CountdownTimerApp(RunningMode(millisRemaining = 72_000))
-    }
-}
-
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
-@Composable
-fun PreviewFinished() {
+fun LightPreviewFinished() {
     MyTheme {
         CountdownTimerApp(Finished)
     }
