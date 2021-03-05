@@ -1,20 +1,25 @@
 package com.example.androiddevchallenge
 
-data class CountdownState(
-    val minutes: Int = 0,
-    val seconds: Int = 10,
-    val millisRemaining: Int = 0
-) {
+sealed class CountdownState
 
-    val started: Boolean = millisRemaining > 0
+object Finished : CountdownState()
 
-    val secondsIndicators: List<Boolean> =
-        ((millisRemaining / 1000) % 60).let { active ->
-            (1..active).map { true } + (active..59).map { false }
-        }
+abstract class CountdownStateWithTime : CountdownState() {
+    abstract val minutes: Int
+    abstract val seconds: Int
+}
 
-    val minutesIndicators: List<Boolean> =
-        ((millisRemaining / 1000) / 60).let { active ->
-            (1..active).map { true } + (active..9).map { false }
-        }
+data class ConfigurationMode(
+    override val minutes: Int = 0,
+    override val seconds: Int = 10
+) : CountdownStateWithTime()
+
+data class RunningMode(
+    val millisRemaining: Int = 0,
+) : CountdownStateWithTime() {
+
+    private val seconsRemaining: Int = millisRemaining / 1000
+
+    override val minutes: Int = (seconsRemaining - 1) / 60
+    override val seconds: Int = seconsRemaining - (minutes * 60)
 }

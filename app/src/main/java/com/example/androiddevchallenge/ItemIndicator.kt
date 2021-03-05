@@ -4,11 +4,15 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,9 +24,12 @@ import com.example.androiddevchallenge.ui.theme.MyTheme
 
 @Composable
 fun ItemIndicator(
-    on: Boolean = false,
+    value: Int,
+    active: Boolean,
     size: Dp = 24.dp,
-    activeColor: Color = MaterialTheme.colors.secondary
+    activeColor: Color = MaterialTheme.colors.secondary,
+    flashValueOnClick: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
     val shape = MaterialTheme.shapes.medium
     Box(
@@ -31,17 +38,23 @@ fun ItemIndicator(
             .clip(shape)
     ) {
         val inactiveColor = if (MaterialTheme.colors.isLight) Color.LightGray else Color.DarkGray
-        val targetValue = if (on) activeColor else inactiveColor
+        val targetValue = if (active) activeColor else inactiveColor
         val color: Color by animateColorAsState(
             targetValue = targetValue,
             animationSpec = tween(durationMillis = 500)
         )
 
         Box(
-            Modifier
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
                 .size(size)
-                .background(color)
-        )
+                .background(color),
+
+        ) {
+            if (flashValueOnClick) {
+                Text(text = value.toString())
+            }
+        }
     }
 }
 
@@ -49,7 +62,7 @@ fun ItemIndicator(
 @Composable
 fun PreviewOn() {
     MyTheme(darkTheme = false) {
-        ItemIndicator(true)
+        ItemIndicator(value = 25, active = true)
     }
 }
 
@@ -57,7 +70,7 @@ fun PreviewOn() {
 @Composable
 fun PreviewOnDark() {
     MyTheme(darkTheme = true) {
-        ItemIndicator(true)
+        ItemIndicator(value = 25, active = true)
     }
 }
 
@@ -65,7 +78,7 @@ fun PreviewOnDark() {
 @Composable
 fun PreviewOff() {
     MyTheme {
-        ItemIndicator(false)
+        ItemIndicator(value = 25, active = false)
     }
 }
 
@@ -73,6 +86,14 @@ fun PreviewOff() {
 @Composable
 fun PreviewOffDark() {
     MyTheme(darkTheme = true) {
-        ItemIndicator(false)
+        ItemIndicator(value = 25, active = false)
+    }
+}
+
+@Preview
+@Composable
+fun PreviewOnWithValue() {
+    MyTheme(darkTheme = false) {
+        ItemIndicator(value = 25, active = true, flashValueOnClick = true)
     }
 }

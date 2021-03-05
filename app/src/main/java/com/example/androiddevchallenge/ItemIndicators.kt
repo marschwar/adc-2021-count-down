@@ -1,41 +1,31 @@
 package com.example.androiddevchallenge
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import kotlin.math.ceil
 
 
 @Composable
 fun ItemIndicators(
-    indicatorStates: List<Boolean>,
+    totalItems: Int,
+    activeItems: Int,
     maxItemsPerRow: Int,
     activeColor: Color = MaterialTheme.colors.secondary
 ) {
-    if (indicatorStates.isEmpty()) {
-        return
-    }
-    val chunked = indicatorStates.chunked(maxItemsPerRow)
+    val rows = ceil(totalItems / maxItemsPerRow.toFloat()).toInt()
     Column {
-        chunked.forEach { row ->
-            ItemIndicatorRow(row, activeColor)
+        (1..rows).forEach { row ->
+            val itemsBeforeThisRow = maxItemsPerRow * (row - 1)
+            ItemIndicatorRow(
+                itemsInRow = minOf(maxItemsPerRow, totalItems - itemsBeforeThisRow),
+                activeItemsInRow = maxOf(0,activeItems - itemsBeforeThisRow),
+                activeColor = activeColor,
+            )
         }
-    }
-}
-
-@Composable
-private fun ItemIndicatorRow(row: List<Boolean>, activeColor: Color) {
-    Row(Modifier.fillMaxWidth()) {
-        Spacer(Modifier.weight(1f))
-        row.forEach { state ->
-            ItemIndicator(on = state, activeColor = activeColor)
-        }
-        Spacer(Modifier.weight(1f))
     }
 }
 
@@ -43,7 +33,7 @@ private fun ItemIndicatorRow(row: List<Boolean>, activeColor: Color) {
 @Composable
 fun PreviewIndicatorsLessThanMax() {
     MyTheme(darkTheme = false) {
-        ItemIndicators(listOf(true, true, false), 5)
+        ItemIndicators(maxItemsPerRow = 5, totalItems = 3, activeItems = 2)
     }
 }
 
@@ -51,6 +41,6 @@ fun PreviewIndicatorsLessThanMax() {
 @Composable
 fun PreviewIndicatorsMultipleRows() {
     MyTheme(darkTheme = false) {
-        ItemIndicators(listOf(true, true, false, true, true, true, false, true), 3)
+        ItemIndicators(maxItemsPerRow = 3, totalItems = 8, activeItems = 5)
     }
 }

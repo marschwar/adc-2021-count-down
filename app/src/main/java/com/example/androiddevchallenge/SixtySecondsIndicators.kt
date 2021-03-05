@@ -8,10 +8,11 @@ import com.example.androiddevchallenge.ui.theme.MyTheme
 
 
 @Composable
-fun SixtySecondsIndicators(indicatorStates: List<Boolean>) {
+fun SixtySecondsIndicators(activeSeconds: Int) {
     ItemIndicators(
-        indicatorStates = indicatorStates,
         maxItemsPerRow = 10,
+        totalItems = 60,
+        activeItems = activeSeconds,
         activeColor = MaterialTheme.colors.secondary
     )
 }
@@ -19,10 +20,9 @@ fun SixtySecondsIndicators(indicatorStates: List<Boolean>) {
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun PreviewOneMinuteLight() {
-    val indicators = (1..15).map { true } + (1..45).map { false }
     MyTheme(darkTheme = false) {
         Surface {
-            SixtySecondsIndicators(indicators)
+            SixtySecondsIndicators(activeSeconds = 14)
         }
     }
 }
@@ -30,10 +30,9 @@ fun PreviewOneMinuteLight() {
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun PreviewOneMinuteDark() {
-    val indicators = (1..15).map { true } + (1..45).map { false }
     MyTheme(darkTheme = true) {
         Surface {
-            SixtySecondsIndicators(indicators)
+            SixtySecondsIndicators(activeSeconds = 47)
         }
     }
 }
