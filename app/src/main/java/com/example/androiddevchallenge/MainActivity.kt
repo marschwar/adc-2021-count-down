@@ -61,12 +61,13 @@ fun CountdownTimerApp(
             Finished -> TimeIsUp(onReset = onReset)
             is CountdownStateWithTime -> Timer(
                 currentState = currentState,
-                onStartStop = onStartStop
+                onStartStop = onStartStop,
+                onMinutesChanged = onMinutesChanged,
+                onSecondsChanged = onSecondsChanged,
             )
         }
     }
 }
-
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
