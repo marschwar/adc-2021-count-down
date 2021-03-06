@@ -1,4 +1,4 @@
-# Put title of your app here
+# Composable Countdown
 
 ![Workflow result](https://github.com/marschwar/adc-2021-count-down/workflows/Check/badge.svg)
 
