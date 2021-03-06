@@ -46,7 +46,7 @@ fun TimeIsUp(onReset: () -> Unit = {}) {
             tint = MaterialTheme.colors.primary,
             modifier = Modifier.size(96.dp)
         )
-        Text(text = "Time is up", style = MaterialTheme.typography.h2)
+        Text(text = "Time's up", style = MaterialTheme.typography.h2)
         Button(onClick = onReset) {
             Text("Reset")
         }
